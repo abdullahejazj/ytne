@@ -7,14 +7,14 @@ import { loadFull } from "tsparticles";
 import JsFileDownloader from "js-file-downloader";
 const ytdl = require("ytdl-core");
 
-import { formatTime, formatNumber } from "./utils";
-import ErrorMessage from "./components/ErrorMessage";
-import Footer from "./components/Footer";
-import VideoCard from "./components/VideoCard";
-import Form from "./components/Form";
-import Loader from "./components/Loader";
-import Header from "./components/Header";
-import HomeText from "./components/HomeText";
+import { formatTime, formatNumber } from "../utils";
+import ErrorMessage from "../components/ErrorMessage";
+import Footer from "../components/Footer";
+import VideoCard from "../components/VideoCard";
+import Form from "../components/Form";
+import Loader from "../components/Loader";
+import Header from "../components/Header";
+import HomeText from "../components/HomeText";
 
 export default class Page extends Component {
   constructor() {
@@ -232,6 +232,7 @@ export default class Page extends Component {
                 active={Boolean(this.state.videoInfo)}
                 downloadingPercentage={this.state.downloadingPercentage}
                 onDownload={this.onDownload}
+                onMp3={true}
               />
               <HomeText />
               <Footer />
