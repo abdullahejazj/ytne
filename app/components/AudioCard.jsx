@@ -15,7 +15,7 @@ import {
 import HDSvg from "../../public/hd.svg";
 import { formatNumber, formatFileSize, formatMimeType } from "../utils";
 
-const VideoCard = ({
+const AudioCard = ({
   videoInfo,
   active,
   downloadingPercentage,
@@ -25,14 +25,12 @@ const VideoCard = ({
   const [dimmerActive, setDimmerActive] = useState(false);
   const [descriptionModal, setDescriptionModal] = useState(false);
 
-  // Filter video and audio formats
-  const videoFormats = videoInfo?.formats.filter(
-    (item) => item.mimeType && item.mimeType.includes("video/mp4")
-  );
+  // Filter audio formats
   const audioFormats = videoInfo?.formats?.filter(
-    (item) => item.mimeType && item.mimeType.includes("audio/mp4")
+    (item) => item.mimeType && item.mimeType.includes("audio")
   );
 
+  console.log(" videoInfo?.formats",videoInfo?.formats)
   return active ? (
     <Grid verticalAlign="middle" stackable style={{ placeContent: "center" }}>
       <Grid.Column width={8}>
@@ -110,55 +108,11 @@ const VideoCard = ({
                 paddingBottom: "1em",
               }}
             >
-              {onMp3 && (
-                <Button
-                  as="div"
-                  labelPosition="left"
-                  key="mp3"
-                  data-tooltip={"MP3"}
-                  data-position="top right"
-                  data-inverted
-                >
-                  <Label color="black" style={{ cursor: "auto" }}>
-                    MP3
-                  </Label>
-                  <Button
-                    icon
-                    basic
-                    color="black"
-                    disabled={downloadingPercentage !== null}
-                    onClick={() => onMp3()}
-                    loading={Boolean(videoInfo.isDownloadingMp3)}
-                  >
-                    <Icon name="download" />
-                  </Button>
-                </Button>
-              )}
+            
               <div className="flex  justify-center bg-slate-500 p-2 text-xl text-white">
-              <Dropdown text="Video Formats">
-                <Dropdown.Menu>
-                  {videoFormats.map((item, index) => (
-                    <Dropdown.Item
-                      key={index}
-                      onClick={() =>
-                        onDownload(
-                          item.itag,
-                          formatMimeType(item.mimeType),
-                          item.qualityLabel || "Audio",
-                          item.contentLength
-                        )
-                      }
-                    >
-                      {item.qualityLabel || "Audio"}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-              </div>
-              <div  className="flex  justify-center bg-slate-500 p-2 text-xl text-white">
-              <Dropdown text="Audio Formats">
-                <Dropdown.Menu>
-                {audioFormats.map((item, index) => (
+                <Dropdown text="Audio Formats">
+                  <Dropdown.Menu>
+                    {audioFormats.map((item, index) => (
                       <Dropdown.Item key={index}>
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <span>{item.qualityLabel}</span>
@@ -186,8 +140,8 @@ const VideoCard = ({
                         </div>
                       </Dropdown.Item>
                     ))}
-                </Dropdown.Menu>
-              </Dropdown>
+                  </Dropdown.Menu>
+                </Dropdown>
               </div>
             </div>
             {downloadingPercentage !== null && (
@@ -263,4 +217,4 @@ const VideoCard = ({
   ) : null;
 };
 
-export default VideoCard;
+export default AudioCard;

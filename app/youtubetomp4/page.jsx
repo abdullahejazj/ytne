@@ -15,7 +15,7 @@ import Form from "../components/Form";
 import Loader from "../components/Loader";
 import Header from "../components/Header";
 import HomeText from "../components/HomeText";
-import AudioCard from "../components/AudioCard";
+import VideoCardMp4 from "../components/VideoCardMp4";
 
 export default class Page extends Component {
   constructor() {
@@ -228,14 +228,12 @@ export default class Page extends Component {
                 errorMessage={this.state.errorMessage}
                 active={Boolean(this.state.errorMessage)}
               />
-            
-              <AudioCard
-               videoInfo={this.state.videoInfo}
-               active={Boolean(this.state.videoInfo)}
-               downloadingPercentage={this.state.downloadingPercentage}
-               onDownload={this.onDownload}
-               onMp3={true}/>
-               
+             
+             <VideoCardMp4   
+             videoInfo={this.state.videoInfo}
+            active={Boolean(this.state.videoInfo)}
+            downloadingPercentage={this.state.downloadingPercentage}
+                onDownload={this.onDownload}/>
               <HomeText />
               <Footer />
             </Grid>

@@ -10,31 +10,26 @@ import {
   Label,
   Progress,
   Modal,
-  Dropdown,
+  Dropdown
 } from "semantic-ui-react";
 import HDSvg from "../../public/hd.svg";
 import { formatNumber, formatFileSize, formatMimeType } from "../utils";
 
-const VideoCard = ({
+const VideoCardMp4 = ({
   videoInfo,
   active,
   downloadingPercentage,
   onDownload,
-  onMp3,
 }) => {
   const [dimmerActive, setDimmerActive] = useState(false);
   const [descriptionModal, setDescriptionModal] = useState(false);
 
-  // Filter video and audio formats
-  const videoFormats = videoInfo?.formats.filter(
-    (item) => item.mimeType && item.mimeType.includes("video/mp4")
-  );
-  const audioFormats = videoInfo?.formats?.filter(
-    (item) => item.mimeType && item.mimeType.includes("audio/mp4")
-  );
-
   return active ? (
-    <Grid verticalAlign="middle" stackable style={{ placeContent: "center" }}>
+    <Grid
+      verticalAlign="middle"
+      stackable
+      style={{ placeContent: "center" }}
+    >
       <Grid.Column width={8}>
         <Card fluid>
           <Dimmer.Dimmable
@@ -42,11 +37,7 @@ const VideoCard = ({
             onMouseEnter={() => setDimmerActive(true)}
             onMouseLeave={() => setDimmerActive(false)}
           >
-            <Image
-              alt={"video-thumbnail"}
-              src={videoInfo.thumbnail}
-              size="huge"
-            />
+            <Image alt={"video-thumbnail"} src={videoInfo.thumbnail} size="huge" />
             <Dimmer.Inner
               active={dimmerActive ? true : undefined}
               as="a"
@@ -102,95 +93,33 @@ const VideoCard = ({
             </Card.Meta>
           </Card.Content>
           <Card.Description>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                paddingBottom: "1em",
-              }}
-            >
-              {onMp3 && (
-                <Button
-                  as="div"
-                  labelPosition="left"
-                  key="mp3"
-                  data-tooltip={"MP3"}
-                  data-position="top right"
-                  data-inverted
-                >
-                  <Label color="black" style={{ cursor: "auto" }}>
-                    MP3
-                  </Label>
-                  <Button
-                    icon
-                    basic
-                    color="black"
-                    disabled={downloadingPercentage !== null}
-                    onClick={() => onMp3()}
-                    loading={Boolean(videoInfo.isDownloadingMp3)}
-                  >
-                    <Icon name="download" />
-                  </Button>
-                </Button>
-              )}
-              <div className="flex  justify-center bg-slate-500 p-2 text-xl text-white">
-              <Dropdown text="Video Formats">
+            <div style={{ paddingBottom: "1em" }} className="flex  justify-center bg-slate-500 pt-3 text-xl text-white">
+              <Dropdown text='Download'>
                 <Dropdown.Menu>
-                  {videoFormats.map((item, index) => (
-                    <Dropdown.Item
-                      key={index}
-                      onClick={() =>
-                        onDownload(
-                          item.itag,
-                          formatMimeType(item.mimeType),
-                          item.qualityLabel || "Audio",
-                          item.contentLength
-                        )
-                      }
-                    >
-                      {item.qualityLabel || "Audio"}
-                    </Dropdown.Item>
-                  ))}
+                  {videoInfo.formats.map((item, index) => {
+                    if (item.mimeType && item.mimeType.includes("video/mp4")) {
+                      return (
+                        <Dropdown.Item
+                          key={index}
+                          text={`${item.qualityLabel || "Audio"} (${formatFileSize(item.contentLength)})`}
+                          onClick={() =>
+                            onDownload(
+                              item.itag,
+                              formatMimeType(item.mimeType),
+                              item.qualityLabel || "Audio",
+                              item.contentLength
+                            )
+                          }
+                        />
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
                 </Dropdown.Menu>
               </Dropdown>
-              </div>
-              <div  className="flex  justify-center bg-slate-500 p-2 text-xl text-white">
-              <Dropdown text="Audio Formats">
-                <Dropdown.Menu>
-                {audioFormats.map((item, index) => (
-                      <Dropdown.Item key={index}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <span>{item.qualityLabel}</span>
-                          <span style={{ marginLeft: "10px" }}>
-                         {item?.audioCodec}   { formatFileSize(item.contentLength)}
-                          </span>
-                          <Button
-                            icon
-                            basic
-                            color="black"
-                            disabled={downloadingPercentage !== null}
-                            onClick={() =>
-                              onDownload(
-                                item.itag,
-                                formatMimeType(item.mimeType),
-                                item.qualityLabel || "Audio",
-                                item.contentLength
-                              )
-                            }
-                            loading={Boolean(item.isDownloading)}
-                            style={{ marginLeft: "10px" }}
-                          >
-                            <Icon name="download" />
-                          </Button>
-                        </div>
-                      </Dropdown.Item>
-                    ))}
-                </Dropdown.Menu>
-              </Dropdown>
-              </div>
             </div>
-            {downloadingPercentage !== null && (
+            {downloadingPercentage !== null ? (
               <Progress
                 percent={downloadingPercentage}
                 progress
@@ -199,12 +128,18 @@ const VideoCard = ({
                 size="medium"
                 success={downloadingPercentage === 100}
               >
-                {downloadingPercentage === 100 ? "Completed" : "Downloading..."}
+                {downloadingPercentage === 100
+                  ? "Completed"
+                  : "Downloading..."}
               </Progress>
-            )}
+            ) : null}
           </Card.Description>
           <Card.Content extra>
-            <Grid columns={"equal"} textAlign="center" verticalAlign="middle">
+            <Grid
+              columns={"equal"}
+              textAlign="center"
+              verticalAlign="middle"
+            >
               <Grid.Column>
                 <b>
                   <Icon name="clock" /> {videoInfo.length}
@@ -231,11 +166,13 @@ const VideoCard = ({
                     <br />
                     {videoInfo.keywords && videoInfo.keywords.length ? (
                       <Label.Group>
-                        {videoInfo.keywords.map((keyword, index) => (
-                          <Label key={index}>
-                            <Icon name="hashtag" /> {keyword}
-                          </Label>
-                        ))}
+                        {videoInfo.keywords.map((keyword, index) => {
+                          return (
+                            <Label key={index}>
+                              <Icon name="hashtag" /> {keyword}
+                            </Label>
+                          );
+                        })}
                       </Label.Group>
                     ) : null}
                   </Modal.Content>
@@ -263,4 +200,4 @@ const VideoCard = ({
   ) : null;
 };
 
-export default VideoCard;
+export default VideoCardMp4;

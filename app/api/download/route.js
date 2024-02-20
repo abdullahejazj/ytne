@@ -45,8 +45,10 @@ export const POST = async req => {
     const data = ytdl(videoId, {
         quality: itag,
         filter: format => format.audioTrack ? format.audioTrack.audioIsDefault : format
+
     })
     
+  
     responseHeaders.set(
         "Total-Bytes",
         `${contentLength}`
